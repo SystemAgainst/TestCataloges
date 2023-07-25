@@ -6,7 +6,7 @@
   <header class="header">
     <div class="container">
       <button class="header__btn-popup">
-        <img src="public/Location.svg" alt="Location SVG Icon">
+        <img alt="Location SVG Icon" src="public/Location.svg">
         <span>Новосибирск</span>
       </button>
     </div>
@@ -19,6 +19,7 @@
   min-width: 100%;
   background-color: white;
 }
+
 .header__btn-popup {
   display: flex;
   align-items: center;

@@ -2,25 +2,13 @@
 import {storeToRefs} from "pinia";
 import {useCategoryStore} from "@/store/categories.js";
 import {onMounted} from "vue";
-import {getCategoriesById} from "@/api/menuTags.js";
 
 const store = useCategoryStore();
-const {categories} = storeToRefs(store);
 
-// Функция для загрузки категорий по cityId
-const loadCategories = async (cityId) => {
-  try {
-    const response = await getCategoriesById(cityId);
-    store.fetchCategories(response.data.tags.children);
-    alert(response.data.tags.children.id);
-  } catch (error) {
-    console.error('Ошибка при загрузке категорий:', error);
-  }
-};
+const {categories, cityId} = storeToRefs(store);
 
 onMounted(() => {
-  const cityId = 1; // Замените на нужный cityId
-  loadCategories(cityId);
+  store.fetchCategories(cityId.value);
 });
 
 </script>
@@ -29,17 +17,17 @@ onMounted(() => {
   <div class="container">
     <div class="products">
       <h2 class="products__title">Категории товаров</h2>
-      <ul class="products__list" v-if="categories.length">
+      <ul v-if="categories.length > 0" class="products__list">
         <li
-            class="products__item"
-            v-for="item in categories.value"
+            v-for="item in categories"
             :key="item.id"
-            :value="item"
             :style="{ backgroundColor: item.text_color }"
+            :value="item"
+            class="products__item"
         >
-          <a class="products__link" :href="item.api_url">
+          <a :href="item.api_url" class="products__link">
             <h3 class="products__link-title">{{ item.name }}</h3>
-            <img class="products__link-img" :src="item.image" :alt="item.name">
+            <img :alt="item.name" :src="item.image" class="products__link-img">
           </a>
         </li>
       </ul>
@@ -52,9 +40,11 @@ onMounted(() => {
 .products {
   margin-top: 35px;
 }
+
 .products__title {
   margin-bottom: 20px;
 }
+
 .products__list {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
